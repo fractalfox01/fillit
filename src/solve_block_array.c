@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 16:50:26 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/16 16:50:33 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/17 12:01:59 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	th(char *block, int i, int minus)
 	}
 }
 
-void	solve_block_array(char ***block_arr)
+void	solve_block_array(char **block_arr)
 {
 	int		i;
 	int		j;
@@ -41,9 +41,11 @@ void	solve_block_array(char ***block_arr)
 	i = 0;
 	j = 0;
 	k = 0;
-	while (ft_strcmp("_END_", *block_arr[i]) != 0)
+	while (block_arr[i])
 	{
 		i++;
+		if (!(block_arr[i]))
+			break ;
 	}
 	while (k < i)
 	{
@@ -56,5 +58,5 @@ void	solve_block_array(char ***block_arr)
 		}
 		k++;
 	}
-	print_puzzle(block_arr[0]);
+	print_puzzle(block_arr);
 }

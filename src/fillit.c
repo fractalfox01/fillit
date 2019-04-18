@@ -6,10 +6,10 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 15:36:30 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/16 16:41:04 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/17 18:19:12 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+#include <stdlib.h>
 #include "../fillit.h"
 
 void	fillit_description(void)
@@ -30,7 +30,7 @@ void	fillit_description(void)
 
 void	fillit(char **av)
 {
-	char	***block_arr;
+	char	**block_arr;
 	int		i;
 
 	i = 0;
@@ -40,19 +40,23 @@ void	fillit(char **av)
 		ft_putstr("bad blocks...\n");
 		return ;
 	}
-	if (validate_tetrominoes(block_arr[0]) == 0)
-	{
-		ft_putstr("Invalid Tetromino");
-		return ;
-	}
-	solve_block_array(&block_arr[0]);
-	
+//	if (validate_tetrominoes(block_arr) == 0)
+//	{
+//		ft_putstr("Invalid Tetromino");
+//		return ;
+//	}
+//	solve_block_array(block_arr);
+	print_puzzle(block_arr);
+
 //	make sure to free. hmm... think complete free needs to loop through till NULL while freeing along the way.	
-	while (ft_strcmp("_END_", *block_arr[i]) != 0)
+	while (block_arr[i] != NULL)
 	{
 		free(block_arr[i++]);
+		if (!(block_arr[i]))
+			break ;
 	}
-	free(block_arr);
+	if (block_arr != NULL)
+		free(block_arr);
 }
 
 int	main(int ac, char **av)

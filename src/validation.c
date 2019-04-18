@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 15:36:05 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/16 16:41:33 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/17 18:19:14 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	check_vertical(int i, int j, char **block)
 	{
 		b = i + 4;
 		i++;
-		if (block[i][j] == '#' && i < b)
+		if (ft_isalpha(block[i][j]) == 1 && i < b)
 		{
 			count++;
 		}
@@ -35,7 +35,7 @@ int	check_vertical(int i, int j, char **block)
 	{
 		b = i - 4;
 		i--;
-		if (block[i][j] == '#' && i > b)
+		if (ft_isalpha(block[i][j]) == 1 && i > b)
 		{
 			count++;
 		}
@@ -45,13 +45,13 @@ int	check_vertical(int i, int j, char **block)
 	if (k % 4 != 0)
 	{
 		k++;
-		if (block[k][j] == '#')
+		if (ft_isalpha(block[i][j]) == 1)
 			count++;
 	}
 	if (i >= 0 && i % 4 != 3)
 	{
 		i--;
-		if (block[i][j] == '#')
+		if (ft_isalpha(block[i][j]) == 1)
 			count++;
 	}
 	return (count);
@@ -66,21 +66,21 @@ int	check_horizonal(int i, int j, char **block)
 */
 	if (j == 0)
 	{
-		if (block[i][j + 1] == '#')
+		if (ft_isalpha(block[i][j + 1]) == 1)
 			return (1);
 		else
 			return (0);
 	}
 	if (j == 3)
 	{
-		if (block[i][j - 1] == '#')
+		if (ft_isalpha(block[i][j - 1]) == 1)
 			return (1);
 		else
 			return (0);
 	}
-	if (block[i][j - 1] == '#')
+	if (ft_isalpha(block[i][j - 1]) == 1)
 		count++;
-	if (block[i][j + 1] == '#')
+	if (ft_isalpha(block[i][j + 1]) == 1)
 		count++;
 	return (count);
 }
@@ -88,67 +88,17 @@ int	check_horizonal(int i, int j, char **block)
 int	validate_tetrominoes(char **block)
 {
 	int	i;
-	int	j;
-	int	k;
-	int	hash;
-	int	dot;
-	int	count;
 
 	i = 0;
-	j = 0;
-	k = 0;
-	hash = 0;
-	dot = 0;
-	count = 0;
-	while (ft_strcmp("_END_", block[i]) != 0 && i <= 103)
+	while (block[i])
 	{
-		while (j < 4)
-		{
-			if (block[i][j] == '#' || block[i][j] == '.')
-			{
-				if (block[i][j] == '#')
-				{
-					count += check_vertical(i, j, block);
-					count += check_horizonal(i, j, block);
-					hash++;
-				}
-				else
-					dot++;
-			}
-			else
-			{
-				printf("ret 0: 1\n");
-				return (0);
-			}
+		while (block[i][j] == '.')
 			j++;
-			k++;
-		}
-		if ((((i + 1) % 4) == 0) && (dot != 12 || hash != 4))
+		if (ft_isalpha(block[i][j]) == 1)
 		{
-			printf("ret 0: 2\n");
-			return (0);
+			// validate horizonal and vertical
 		}
-		if (((i + 1) % 4) == 0 && (count != 6 && count != 8))
-		{
-			printf("ret 0: 3\n");
-			return (0);
-		}
-		if ((((i + 1) % 4) == 0) && (dot == 12 || hash == 4))
-		{
-			if (count == 6 || count == 8)
-			{
-				count = 0;
-				hash = 0;
-				dot = 0;
-			}
-			else
-			{
-				printf("ret 0: 1\n");
-				return (0);
-			}
-		}
-		j = 0;
-		i++;
+		else if (block[i][j] == '\n')
+			i++;
 	}
-	return (1);
 }
