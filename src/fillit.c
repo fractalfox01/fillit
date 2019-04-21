@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 18:35:26 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/20 18:12:51 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/20 19:52:10 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,28 @@ int		is_valid_char(char c)
 	return (0);
 }
 
-void	store_piece(t_board main_board, int i, char c)
+void	print_board(char **board)
 {
-	ft_putstr(main_board.board[i]);
-	ft_putstr("\n");
-	ft_putnbr(c);
-	ft_putstr("\n");
+	int	i;
+
+	i = 0;
+	while (!(!(board[i])))
+	{
+		ft_putstr(board[i++]);
+		ft_putchar('\n');
+		if (i % 4 == 0 && !(!(board[i + 1])))
+			ft_putchar('\n');
+	}
+}
+
+void	store_board(char *board, int s)
+{
+	int		size;
+	t_board	n_board;
+
+	size = s - (s * .1) / 4;
+	n_board = new_board(size);
+	n_board.tetri_count = size;
 }
 
 t_board	new_board(int size)
@@ -56,19 +72,19 @@ t_board	new_board(int size)
 	i = 0;
 	blank_board = (char *)malloc(sizeof(char) * 546);
 	ft_bzero(blank_board, 545);
-	while (i < 510)
+	// needs re-write to be a board to place pieces on. 5 x 5, 7 x 7, etc..
+	while (i < 510 && i < ((size * 20) - 10))
 	{
 		tmp = ft_strdup(".... .... ");
 		blank_board = ft_strjoin(blank_board, tmp);
 		ft_bzero(tmp, 10);
 		ft_strdel(&tmp);
 		i += 10;
-		if (i >= ((size * 20) - 10))
-			break ;
 	}
 	blank_board = ft_strjoin(blank_board, ".... ....");
-	new_board.board = ft_strsplit(blank_board, ' ');
-	new_board.tetri_count = size;
+	new_board.solved_board = ft_strsplit(blank_board, ' ');
+	new_board.tmp_board = NULL;
+	new_board.tetri_count = (size <= 26) ? size : 26;
 	new_board.valid = 1;
 
 	return (new_board);
@@ -76,34 +92,25 @@ t_board	new_board(int size)
 
 t_board	read_file(char *file)
 {
-//	int		fd;
-//	int		a;
-//	int		i;
-//	char	*buf;
+	int		fd;
+	int		a;
+	int		i;
+	char	*buf;
 	
-/*	fd = open(fd, O_RDONLY);
+	fd = open(file, O_RDONLY);
 	a = 0;
 	if (fd > 0)
 	{
-		while (a = read(fd, buf, 546) > 0)
+		if ((a = read(fd, buf, 546)) > 0)
 		{
-			if (a == 546)
-			{
-				return (error());
-			}
-			if ((a = is_valid_char(buf)) > 0)
-			{
-				store_piece(main_board, i, buf);
-				i++;
-			}
+			store_board(buf, a);	
 		}
+		else
+			return (error());
 	}
 	else
 		return (error());
-*/
-	if (file)
-		;
-	return (new_board(7));
+	return (new_board(42));
 }
 
 void	fillit(char *file)
@@ -115,13 +122,7 @@ void	fillit(char *file)
 	if (file)
 	{
 		main_board = read_file(file);
-		while (i < (main_board.tetri_count * 4))
-		{
-			ft_putstr(main_board.board[i++]);
-			ft_putchar('\n');
-			if (i % 4 == 0)
-				ft_putstr("\n");
-		}
+		print_board(main_board.solved_board);
 	}
 }
 
