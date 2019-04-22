@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 18:35:26 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/21 14:05:02 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/22 13:46:52 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,46 +68,31 @@ t_board	*new_board(int size)
 	while (i < size)
 	{
 		tmp = ft_strnew(size + 1);
-		ft_memset(tmp, '.', sizeof(tmp));
-		tmp[size] = '\n';
+		ft_memset(tmp, '.', (size_t)(size));
+		tmp[size] = 'Z';
 		blank_board = ft_strjoin(blank_board, tmp);
 		ft_bzero(tmp, size );
 		ft_strdel(&tmp);
 		i++;
 	}
-	new_board.solved_board = ft_strsplit(blank_board, '\n');
+	new_board.solved_board = ft_strsplit(blank_board, 'Z');
 	new_board.tmp_board = NULL;
 	new_board.tetri_count = (size <= 26) ? size : 26;
 	new_board.valid = 1;
 	return (ret);
 }
 
-void	store_board(char *board, int s, t_board n_board)
+void	store_board(char *board, int s, t_board *n_board)
 {
 	int		i;
-	int		j;
-	int		k;
-	char	*tmp;
-
+	
 	i = 0;
-	j = 0;
-	k = 0;
-	tmp = ft_strnew(4);
+	n_board->tmp_board = (char **)malloc(sizeof(char *) * (4 * s));
 	while (i < s)
 	{
-		if (is_valid_char(board[i]) > 0)
-		{
-			tmp[k] = board[j];
-			if (is_valid_char(board[i]) == 3)
-			{
-				n_board.tmp_board[j] = tmp;
-				ft_bzero(tmp, 4);
-				j++;
-				k = 0;
-			}
-			k++;
-		}
-		i++;
+		n_board->tmp_board[i] = ft_strnew(5);
+		ft_strncpy(n_board->tmp_board[i], (board + i), 5);
+		i += 5;
 	}
 }
 
@@ -119,15 +104,22 @@ int		read_file(char *file, t_board *n_board)
 	
 	fd = open(file, O_RDONLY);
 	a = 0;
-	buf = ft_strnew(546);
+	buf = ft_strnew(21);
 	if (fd > 0)
 	{
-		if ((a = read(fd, buf, 546)) > 0)
+		while ((a = read(fd, buf, 21)) > 0)
+		{
+			if (a == 20 || a == 21)
+			{
+				//n_board->tmp_board
+			}
+		}
+/*		if ((a = read(fd, buf, 546)) > 0 && a < 546)
 		{
 			n_board = new_board(((a * .1) / 4));
 			n_board->tetri_count = ((a * .1) / 4);
-			store_board(buf, a, *n_board);
-		}
+			store_board(buf, a, n_board);
+*/		}
 	}
 	if (!(!(n_board->tmp_board)))
 		return (1);

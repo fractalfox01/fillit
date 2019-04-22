@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 19:25:17 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/20 19:32:08 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/22 13:46:27 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct			s_tetfile
 typedef struct			s_board
 {
 	char				**solved_board;
-	char				**tmp_board;
+	t_piece				*tmp_board;
 	int					tetri_count;
 	int					valid;
 }						t_board;
