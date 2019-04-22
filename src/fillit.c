@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 18:35:26 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/22 13:46:52 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/22 14:53:20 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_board	*new_board(int size)
 	new_board.valid = 1;
 	return (ret);
 }
-
+/*
 void	store_board(char *board, int s, t_board *n_board)
 {
 	int		i;
@@ -94,16 +94,45 @@ void	store_board(char *board, int s, t_board *n_board)
 		ft_strncpy(n_board->tmp_board[i], (board + i), 5);
 		i += 5;
 	}
+}*/
+
+t_piece	*piece_lstnew(char *cont, size_t c_size, int idx)
+{
+	t_piece	*lst;
+
+	lst = (t_piece *)malloc(sizeof(t_piece));
+	if (!(lst))
+		return (NULL);
+	if (cont == NULL || c_size == 0)
+	{
+		lst->piece = NULL;
+		lst->p_num = 0;
+		lst->next = NULL;
+		return (lst);
+	}
+	else
+	{
+		lst->piece = (char **)malloc((size_t)(c_size + 1));
+		if (!(lst->piece))
+			return (NULL);
+		ft_memcpy((void *)(lst->piece), cont, c_size);
+		lst->p_num = idx;
+		lst->next = NULL;
+		return (lst);
+	}
+	return (NULL);
 }
 
 int		read_file(char *file, t_board *n_board)
 {
 	int		fd;
 	int		a;
+	int		i;
 	char	*buf;
 	
 	fd = open(file, O_RDONLY);
 	a = 0;
+	i = 0;
 	buf = ft_strnew(21);
 	if (fd > 0)
 	{
@@ -111,16 +140,19 @@ int		read_file(char *file, t_board *n_board)
 		{
 			if (a == 20 || a == 21)
 			{
-				//n_board->tmp_board
+				n_board->tmp_board = piece_lstnew(buf, a, i);
+				i++;
 			}
+			else
+				break ;
 		}
 /*		if ((a = read(fd, buf, 546)) > 0 && a < 546)
 		{
 			n_board = new_board(((a * .1) / 4));
 			n_board->tetri_count = ((a * .1) / 4);
 			store_board(buf, a, n_board);
-*/		}
-	}
+		}
+*/	}
 	if (!(!(n_board->tmp_board)))
 		return (1);
 	return (0);
