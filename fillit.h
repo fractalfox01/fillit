@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 19:25:17 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/22 13:46:27 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/23 13:09:25 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct			s_board
 {
 	char				**solved_board;
 	t_piece				*tmp_board;
-	int					tetri_count;
+	int					tetra_count;
 	int					valid;
 }						t_board;
 

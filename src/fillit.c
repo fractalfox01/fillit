@@ -6,12 +6,11 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 18:35:26 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/22 14:53:20 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/23 13:50:19 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../fillit.h"
-
 
 /*
 ** Bad character found: creates and returns an 'invalid' array. 
@@ -38,17 +37,39 @@ int		is_valid_char(char c)
 	return (0);
 }
 
-void	print_board(char **board)
+void	print_board(t_board *main_board)
 {
 	int	i;
 
 	i = 0;
-	while (!(!(board[i])))
+	while (i < main_board->tetra_count)
 	{
-		ft_putstr(board[i++]);
-		ft_putchar('\n');
-		if (i % 4 == 0 && !(!(board[i + 1])))
+		ft_putstr(main_board->solved_board[i++]);
+	}
+}
+
+void	print_pieces(t_board *mst)
+{
+	int		i;
+	t_piece	*tmp;
+	t_piece	*nxt;
+
+	i = 0;
+	tmp = mst->tmp_board;
+	while (tmp)
+	{
+		if (!(tmp->piece))
+			break ;
+		nxt = tmp->next;
+		while (i < 4)
+		{
+			ft_putstr(tmp->piece[i++]);
 			ft_putchar('\n');
+		}
+		ft_putnbr(tmp->p_num);
+		ft_putchar('\n');
+		i = 0;
+		tmp = nxt;
 	}
 }
 
@@ -77,58 +98,19 @@ t_board	*new_board(int size)
 	}
 	new_board.solved_board = ft_strsplit(blank_board, 'Z');
 	new_board.tmp_board = NULL;
-	new_board.tetri_count = (size <= 26) ? size : 26;
+	new_board.tetra_count = (size <= 26) ? size : 26;
 	new_board.valid = 1;
 	return (ret);
-}
-/*
-void	store_board(char *board, int s, t_board *n_board)
-{
-	int		i;
-	
-	i = 0;
-	n_board->tmp_board = (char **)malloc(sizeof(char *) * (4 * s));
-	while (i < s)
-	{
-		n_board->tmp_board[i] = ft_strnew(5);
-		ft_strncpy(n_board->tmp_board[i], (board + i), 5);
-		i += 5;
-	}
-}*/
-
-t_piece	*piece_lstnew(char *cont, size_t c_size, int idx)
-{
-	t_piece	*lst;
-
-	lst = (t_piece *)malloc(sizeof(t_piece));
-	if (!(lst))
-		return (NULL);
-	if (cont == NULL || c_size == 0)
-	{
-		lst->piece = NULL;
-		lst->p_num = 0;
-		lst->next = NULL;
-		return (lst);
-	}
-	else
-	{
-		lst->piece = (char **)malloc((size_t)(c_size + 1));
-		if (!(lst->piece))
-			return (NULL);
-		ft_memcpy((void *)(lst->piece), cont, c_size);
-		lst->p_num = idx;
-		lst->next = NULL;
-		return (lst);
-	}
-	return (NULL);
 }
 
 int		read_file(char *file, t_board *n_board)
 {
 	int		fd;
 	int		a;
-	int		i;
+	t_piece	*tmp;
+	t_piece	*nxt;
 	char	*buf;
+	int		i;
 	
 	fd = open(file, O_RDONLY);
 	a = 0;
@@ -136,15 +118,21 @@ int		read_file(char *file, t_board *n_board)
 	buf = ft_strnew(21);
 	if (fd > 0)
 	{
+		n_board->tmp_board = (t_piece *)malloc(sizeof(t_piece) * 1);
+		tmp = n_board->tmp_board;
 		while ((a = read(fd, buf, 21)) > 0)
 		{
 			if (a == 20 || a == 21)
 			{
-				n_board->tmp_board = piece_lstnew(buf, a, i);
-				i++;
+				tmp->next = (t_piece *)malloc(sizeof(t_piece) * 1);
+				nxt = tmp->next;
+				tmp->piece = &*ft_strsplit(buf, '\n');
+				tmp->p_num = i++;
+				tmp = nxt;
+				ft_bzero(buf, a);
 			}
 			else
-				break ;
+				return (0);
 		}
 /*		if ((a = read(fd, buf, 546)) > 0 && a < 546)
 		{
@@ -158,17 +146,160 @@ int		read_file(char *file, t_board *n_board)
 	return (0);
 }
 
+void	set_length(t_board *main_board)
+{
+	t_piece	*tmp;
+	t_piece	*nxt;
+	int		i;
+
+	i = -1;
+	tmp = main_board->tmp_board;
+	while (tmp)
+	{
+		nxt = tmp->next;
+		i++;
+		tmp = nxt;
+	}
+	main_board->tetra_count = i;
+}
+
+int	check_vertical(int i, int j, char **block)
+{
+	int	count;
+	int	b;
+	int	k;
+
+	count = 0;
+	b = 0;
+	k = 0;
+	if (i % 4 == 0)
+	{
+		b = i + 4;
+		i++;
+		if (ft_isalpha(block[i][j]) == 1 && i < b)
+			count++;
+		return (count);
+	}
+	if (i % 4 == 3)
+	{
+		b = i - 4;
+		i--;
+		if (ft_isalpha(block[i][j]) == 1 && i > b)
+			count++;
+		return (count);
+	}
+	k = i;
+	if (k % 4 != 0)
+	{
+		k++;
+		if (ft_isalpha(block[i][j]) == 1)
+			count++;
+	}
+	if (i >= 0 && i % 4 != 3)
+	{
+		if (ft_isalpha(block[i--][j]) == 1)
+			count++;
+	}
+	return (count);
+}
+
+int	check_horizonal(int i, int j, char **block)
+{
+	int count = 0;
+/*
+** range limits 0 - 103
+**start index is 0, 4, 8, 12
+*/
+	if (j == 0)
+	{
+		if (ft_isalpha(block[i][j + 1]) == 1)
+			return (1);
+		else
+			return (0);
+	}
+	if (j == 3)
+	{
+		if (ft_isalpha(block[i][j - 1]) == 1)
+			return (1);
+		else
+			return (0);
+	}
+	if (ft_isalpha(block[i][j - 1]) == 1)
+		count++;
+	if (ft_isalpha(block[i][j + 1]) == 1)
+		count++;
+	return (count);
+}
+
+int		verify_tetra(char **tab)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < 4)
+	{
+		while (j < 4)
+		{
+			if (tab[i][j] == '.')
+				dot++;
+			else if (tab[i][j] == '#')
+			{
+				count += count_vertical(tab, i, j);
+				count += count_horizonal(tab, i, j);
+				hash++;
+			}
+			else
+				return (0);
+		}
+	}
+}
+
+int		verify_file(t_board *main_board)
+{
+	t_piece *tmp;
+	t_piece *nxt;
+	int		i;
+
+	i = 0;
+	tmp = main_board->tmp_board;
+	while (tmp)
+	{
+		nxt = tmp->next;
+		if (verify_tetra(tmp->piece) == 0)
+			return (0);
+	}
+	return (1);
+}
+
+void	make_board(t_board *main_board)
+{
+	if (main_board)
+		return ;
+}
+
 void	fillit(char *file)
 {
 	int		i;
 	t_board	*main_board;
 	
 	i = 0;
-	main_board = NULL;
+	main_board = (t_board *)malloc(sizeof(t_board) * 1);
 	if (file)
 	{
 		if(read_file(file, main_board) == 1)
-			print_board(main_board->solved_board);
+		{
+			set_length(main_board);
+			verify_file(main_board);
+			ft_putnbr(main_board->tetra_count);
+			ft_putstr("\n");
+		//	make_board(main_board);
+		//	print_pieces(main_board);
+		//	print_board(main_board);
+		}
+		else
+			ft_putstr("What exactly are you trying to do?\n");
 	}
 }
 
