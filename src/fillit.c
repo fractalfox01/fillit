@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 18:35:26 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/23 15:14:50 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/23 16:30:37 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ int	check_vertical(int i, int j, char **block)
 			dir = -1;
 		b = i + 4;
 		i += dir;
-		if (ft_isalpha(block[i][j]) == 1 && i < b)
+		if (is_valid_char(block[i][j]) == 2 && i < b)
 			count++;
 		return (count);
 	}
@@ -217,21 +217,21 @@ int	check_horizonal(int i, int j, char **block)
 */
 	if (j == 0)
 	{
-		if (ft_isalpha(block[i][j + 1]) == 1)
+		if (is_valid_char(block[i][j + 1]) == 2)
 			return (1);
 		else
 			return (0);
 	}
 	if (j == 3)
 	{
-		if (ft_isalpha(block[i][j - 1]) == 1)
+		if (is_valid_char(block[i][j - 1]) == 2)
 			return (1);
 		else
 			return (0);
 	}
-	if (ft_isalpha(block[i][j - 1]) == 1)
+	if (is_valid_char(block[i][j - 1]) == 2)
 		count++;
-	if (ft_isalpha(block[i][j + 1]) == 1)
+	if (is_valid_char(block[i][j + 1]) == 2)
 		count++;
 	return (count);
 }
@@ -278,6 +278,7 @@ int		verify_file(t_board *main_board)
 		if (verify_tetra(tmp->piece, -1, -1, 0) == 0)
 			return (0);
 		ft_putstr("Tetra is good\n");
+		tmp = nxt;
 	}
 	return (1);
 }
