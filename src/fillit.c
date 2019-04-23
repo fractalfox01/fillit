@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 18:35:26 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/23 13:50:19 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/23 15:14:50 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,32 +163,11 @@ void	set_length(t_board *main_board)
 	main_board->tetra_count = i;
 }
 
-int	check_vertical(int i, int j, char **block)
+int	c_chk(int k, int i, int j, char **block)
 {
 	int	count;
-	int	b;
-	int	k;
 
 	count = 0;
-	b = 0;
-	k = 0;
-	if (i % 4 == 0)
-	{
-		b = i + 4;
-		i++;
-		if (ft_isalpha(block[i][j]) == 1 && i < b)
-			count++;
-		return (count);
-	}
-	if (i % 4 == 3)
-	{
-		b = i - 4;
-		i--;
-		if (ft_isalpha(block[i][j]) == 1 && i > b)
-			count++;
-		return (count);
-	}
-	k = i;
 	if (k % 4 != 0)
 	{
 		k++;
@@ -201,6 +180,32 @@ int	check_vertical(int i, int j, char **block)
 			count++;
 	}
 	return (count);
+}
+
+int	check_vertical(int i, int j, char **block)
+{
+	int	count;
+	int	b;
+	int	k;
+	int dir;
+
+	count = 0;
+	b = 0;
+	k = 0;
+	if (i % 4 == 0 || i % 4 == 3)
+	{
+		if (i % 4 == 0)
+			dir = 1;
+		else
+			dir = -1;
+		b = i + 4;
+		i += dir;
+		if (ft_isalpha(block[i][j]) == 1 && i < b)
+			count++;
+		return (count);
+	}
+	k = i;
+	return (c_chk(k, i, j, block));
 }
 
 int	check_horizonal(int i, int j, char **block)
@@ -231,29 +236,32 @@ int	check_horizonal(int i, int j, char **block)
 	return (count);
 }
 
-int		verify_tetra(char **tab)
+int		verify_tetra(char **tab, int i, int j, int hash)
 {
-	int	i;
-	int	j;
+	int	count;
 
-	i = 0;
-	j = 0;
-	while (i < 4)
+	count = 0;
+	while (++i < 4)
 	{
-		while (j < 4)
+		while (++j < 4)
 		{
-			if (tab[i][j] == '.')
-				dot++;
-			else if (tab[i][j] == '#')
+			if (tab[i][j] == '.' || tab[i][j] == '#')
 			{
-				count += count_vertical(tab, i, j);
-				count += count_horizonal(tab, i, j);
-				hash++;
+				if (tab[i][j] == '#')
+				{
+					count += check_vertical(i, j, tab);
+					count += check_horizonal(i, j, tab);
+					hash++;
+				}
 			}
 			else
 				return (0);
 		}
+		j = -1;
 	}
+	if ((count == 6 || count == 8) && hash == 4)
+		return (1);
+	return (0);
 }
 
 int		verify_file(t_board *main_board)
@@ -267,8 +275,9 @@ int		verify_file(t_board *main_board)
 	while (tmp)
 	{
 		nxt = tmp->next;
-		if (verify_tetra(tmp->piece) == 0)
+		if (verify_tetra(tmp->piece, -1, -1, 0) == 0)
 			return (0);
+		ft_putstr("Tetra is good\n");
 	}
 	return (1);
 }
