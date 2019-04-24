@@ -6,11 +6,11 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 18:35:26 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/23 22:27:07 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/23 22:42:50 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fillit.h"
+#include "fillit.h"
 
 /*
 ** Bad character found: creates and returns an 'invalid' array. 

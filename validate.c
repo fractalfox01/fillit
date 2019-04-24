@@ -6,11 +6,11 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 22:19:12 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/23 22:23:17 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/23 22:43:12 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fillit.h"
+#include "fillit.h"
 
 int	c_chk(int k, int i, int j, char **block)
 {

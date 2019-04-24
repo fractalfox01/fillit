@@ -6,11 +6,11 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 22:23:45 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/23 22:25:04 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/23 22:43:02 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fillit.h"
+#include "fillit.h"
 
 void	set_length(t_board *main_board)
 {

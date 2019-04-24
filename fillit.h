@@ -6,7 +6,7 @@
 /*   By: tvandivi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 19:25:17 by tvandivi          #+#    #+#             */
-/*   Updated: 2019/04/23 13:09:25 by tvandivi         ###   ########.fr       */
+/*   Updated: 2019/04/23 22:43:30 by tvandivi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <stdio.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include "../libft/get_next_line.h"
 # include "../libft/libft.h"
 
 typedef struct			s_tetfile
